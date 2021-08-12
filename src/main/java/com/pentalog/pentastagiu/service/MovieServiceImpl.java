@@ -1,6 +1,7 @@
 package com.pentalog.pentastagiu.service;
 
 import com.pentalog.pentastagiu.repository.api.MovieRepository;
+import com.pentalog.pentastagiu.repository.model.HibernateMovieRepository;
 import com.pentalog.pentastagiu.service.api.MovieService;
 import com.pentalog.pentastagiu.service.dto.MovieDTO;
 import com.pentalog.pentastagiu.web.exception.NoMovieException;
@@ -15,6 +16,11 @@ public class MovieServiceImpl implements MovieService {
     @Resource
     private MovieRepository movieRepository;
 
+    private final HibernateMovieRepository hibernateMovieRepository;
+
+    public MovieServiceImpl(HibernateMovieRepository hibernateMovieRepository) {
+        this.hibernateMovieRepository = hibernateMovieRepository;
+    }
 
     @Override
     public List<MovieDTO> getAll() {
@@ -24,7 +30,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDTO getById(String id) {
         MovieDTO movieDTO = movieRepository.getById(id);
-        if(movieDTO == null){
+        if (movieDTO == null) {
             throw new NoMovieException(id);
         }
         return movieDTO;
@@ -38,7 +44,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public void delete(String movieId) {
         MovieDTO dbMovie = getById(movieId);
-        if(dbMovie == null){
+        if (dbMovie == null) {
             throw new RuntimeException("Movie doesn't exist!");
         }
         movieRepository.delete(movieId);
@@ -46,7 +52,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void update(String movieId, MovieDTO movieDTO) {
-        movieRepository.update(movieId,movieDTO);
+        movieRepository.update(movieId, movieDTO);
     }
 
     @Override
